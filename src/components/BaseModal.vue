@@ -10,9 +10,10 @@
         @click="emitClose"
         aria-hidden="true"
       />
+
       <div
         ref="panel"
-        class="relative w-[min(1320px,96vw)] h-[min(820px,92vh)] overflow-hidden rounded-2xl bg-white shadow-xl"
+        class="relative w-[min(1320px,96vw)] h-[min(820px,92vh)] overflow-hidden rounded-[28px] bg-white shadow-2xl"
         role="dialog"
         aria-modal="true"
         :aria-label="ariaLabel"
@@ -25,7 +26,7 @@
 </template>
 
 <script setup>
-import { nextTick, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { nextTick, onBeforeUnmount, ref, watch } from "vue";
 
 const props = defineProps({
   open: { type: Boolean, required: true },
@@ -97,9 +98,6 @@ watch(
   },
   { immediate: true }
 );
-
-onMounted(() => {
-});
 
 onBeforeUnmount(() => {
   document.removeEventListener("keydown", trapTab);

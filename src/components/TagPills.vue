@@ -4,11 +4,11 @@
       v-for="t in tags"
       :key="t"
       type="button"
-      class="rounded-full border px-3 py-1 text-xs transition"
+      class="h-9 rounded-lg px-3 text-sm transition"
       :class="
         t === modelValue
-          ? 'border-blue-500 bg-blue-50 text-blue-700'
-          : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+          ? 'bg-blue-50 text-blue-700'
+          : 'bg-white text-slate-600 hover:bg-slate-50'
       "
       @click="$emit('update:modelValue', t)"
     >

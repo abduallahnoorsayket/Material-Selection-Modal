@@ -4,36 +4,34 @@
     aria-label="Select Your Material"
     @close="$emit('close')"
   >
-    <div class="flex h-full flex-col">
-      <!-- Header -->
-      <div
-        class="flex items-center justify-between border-b border-slate-100 px-6 py-4"
+    <div class="relative flex h-full flex-col">
+      <!-- Floating close (like Figma) -->
+      <button
+        type="button"
+        class="absolute right-6 top-6 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200"
+        @click="$emit('close')"
+        aria-label="Close"
       >
-        <div>
-          <div class="text-base font-semibold text-slate-900">
-            Select Your Material
-          </div>
+        ✕
+      </button>
+
+      <!-- Header -->
+      <div class="px-10 pt-10">
+        <div class="text-3xl font-semibold text-slate-900">
+          Select Your Material
         </div>
-        <button
-          type="button"
-          class="rounded-lg px-2 py-1 text-slate-500 hover:bg-slate-50"
-          @click="$emit('close')"
-          aria-label="Close"
-        >
-          ✕
-        </button>
       </div>
 
       <!-- Body -->
-      <div class="flex-1 overflow-hidden px-6 py-4">
-        <div class="flex h-full flex-col gap-4">
-          <!-- Category tabs -->
-          <div class="flex flex-wrap items-center gap-2">
+      <div class="flex-1 overflow-hidden px-10 pt-6">
+        <div class="flex h-full flex-col gap-3">
+          <!-- Row 1: categories + search -->
+          <div class="flex flex-wrap items-center gap-3">
             <button
               v-for="c in categories"
               :key="c.id"
               type="button"
-              class="rounded-lg border px-3 py-1.5 text-xs transition"
+              class="h-10 rounded-lg border px-5 text-sm transition"
               :class="
                 c.id === categoryId
                   ? 'border-blue-500 bg-blue-50 text-blue-700'
@@ -44,7 +42,7 @@
               {{ c.name }}
             </button>
 
-            <div class="ml-auto w-full sm:w-[320px]">
+            <div class="ml-auto w-full sm:w-[420px]">
               <SearchInput
                 v-model="query"
                 placeholder="Search by name or color..."
@@ -52,13 +50,12 @@
             </div>
           </div>
 
-          <!-- Tags row -->
-          <div class="flex items-start gap-3">
-            <div class="shrink-0 text-xs font-medium text-slate-600">Tags</div>
+          <!-- Row 2: tags (NO border area like screenshot) -->
+          <div class="flex flex-wrap items-center gap-3">
             <TagPills v-model="activeTag" :tags="availableTags" />
           </div>
 
-          <!-- Grid -->
+          <!-- Grid (only scroll area) -->
           <div class="flex-1 min-h-0 overflow-auto pr-2">
             <MaterialGrid
               :items="filteredMaterials"
@@ -71,35 +68,23 @@
       </div>
 
       <!-- Footer -->
-      <div
-        class="flex items-center justify-between border-t border-slate-100 px-6 py-4"
-      >
-        <div class="text-xs text-slate-500">
-          <span v-if="tempSelected">Selected:</span>
-          <span v-if="tempSelected" class="font-medium text-slate-800">
-            {{ tempSelected.name }} ({{ tempSelected.code }})
-          </span>
-          <span v-else>No selection</span>
-        </div>
+      <div class="flex items-center justify-end gap-3 px-10 pb-8 pt-4">
+        <button
+          type="button"
+          class="h-10 rounded-xl border border-slate-200 bg-white px-6 text-sm hover:bg-slate-50"
+          @click="$emit('close')"
+        >
+          Cancel
+        </button>
 
-        <div class="flex items-center gap-2">
-          <button
-            type="button"
-            class="rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm hover:bg-slate-50"
-            @click="$emit('close')"
-          >
-            Cancel
-          </button>
-
-          <button
-            type="button"
-            class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
-            :disabled="!tempSelectedId"
-            @click="insert"
-          >
-            Insert
-          </button>
-        </div>
+        <button
+          type="button"
+          class="h-10 rounded-xl bg-blue-600 px-6 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+          :disabled="!tempSelectedId"
+          @click="insert"
+        >
+          Insert
+        </button>
       </div>
     </div>
   </BaseModal>
@@ -118,11 +103,10 @@ const props = defineProps({
   categories: { type: Array, required: true },
   tagsByCategory: { type: Object, required: true },
   materials: { type: Array, required: true },
-  selectedId: { type: String, default: null }, // committed selection
+  selectedId: { type: String, default: null },
 });
 
 const emit = defineEmits(["close", "insert"]);
-
 const allMaterials = computed(() => props.materials);
 
 const {
@@ -137,20 +121,13 @@ const {
   tagsByCategory: props.tagsByCategory,
 });
 
-// Temporary selection inside modal (user can change without committing)
 const tempSelectedId = ref(props.selectedId);
 
 watch(
   () => props.open,
   (isOpen) => {
-    if (isOpen) {
-      tempSelectedId.value = props.selectedId;
-    }
+    if (isOpen) tempSelectedId.value = props.selectedId;
   }
-);
-
-const tempSelected = computed(
-  () => props.materials.find((m) => m.id === tempSelectedId.value) || null
 );
 
 function onSelect(id) {
