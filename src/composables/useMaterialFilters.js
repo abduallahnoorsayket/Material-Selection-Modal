@@ -5,11 +5,21 @@ export function useMaterialFilters({ allMaterials, tagsByCategory }) {
   const activeTag = ref("All");
   const query = ref("");
 
+  // Debounced query for smoother filtering
+  const debouncedQuery = ref("");
+  let t = null;
+
+  watch(query, (val) => {
+    window.clearTimeout(t);
+    t = window.setTimeout(() => {
+      debouncedQuery.value = val;
+    }, 200);
+  });
+
   const availableTags = computed(() => {
     return tagsByCategory[categoryId.value] || ["All"];
   });
 
-  // Keep tag valid when category changes
   watch(categoryId, () => {
     const tags = availableTags.value;
     if (!tags.includes(activeTag.value)) {
@@ -18,7 +28,7 @@ export function useMaterialFilters({ allMaterials, tagsByCategory }) {
   });
 
   const filteredMaterials = computed(() => {
-    const q = query.value.trim().toLowerCase();
+    const q = debouncedQuery.value.trim().toLowerCase();
     return allMaterials.value.filter((m) => {
       const categoryOk =
         categoryId.value === "all" ? true : m.categoryId === categoryId.value;
@@ -41,6 +51,7 @@ export function useMaterialFilters({ allMaterials, tagsByCategory }) {
     categoryId.value = "all";
     activeTag.value = "All";
     query.value = "";
+    debouncedQuery.value = "";
   }
 
   return {

@@ -25,7 +25,8 @@
     <!-- Bottom-left code pill -->
     <div class="absolute bottom-3 left-2">
       <span
-        class="rounded bg-black/85 px-2 py-1 text-[11px] font-medium text-white"
+        class="rounded px-2 py-1 text-[11px] font-medium text-white transition"
+        :class="selected ? 'bg-blue-500' : 'bg-black/85'"
       >
         {{ material.code }}
       </span>

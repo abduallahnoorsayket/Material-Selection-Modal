@@ -5,14 +5,39 @@
         <!-- Add/Selected Box -->
         <button
           type="button"
-          class="flex h-40 w-40 items-center justify-center rounded-xl border border-slate-200 bg-white hover:bg-slate-50"
+          class="relative flex h-40 w-40 items-center justify-center rounded-xl border border-slate-200 bg-white hover:bg-slate-50"
           @click="open = true"
         >
+          <button
+            v-if="selectedMaterial"
+            type="button"
+            class="absolute right-2 top-2 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 text-slate-700 shadow hover:bg-white"
+            aria-label="Remove selection"
+            @click.stop="clear"
+          >
+            ✕
+          </button>
+
           <div
             v-if="!selectedMaterial"
             class="flex flex-col items-center gap-2 text-slate-600"
           >
-            <div class="text-2xl">＋</div>
+            <svg
+              viewBox="0 0 24 24"
+              class="h-8 w-8 text-slate-500"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M4 7a3 3 0 0 1 3-3h6a1 1 0 1 1 0 2H7a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-6a1 1 0 1 1 2 0v6a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3V7Z"
+                fill="currentColor"
+              />
+              <path
+                d="M18 3a1 1 0 0 1 1 1v2h2a1 1 0 1 1 0 2h-2v2a1 1 0 1 1-2 0V8h-2a1 1 0 1 1 0-2h2V4a1 1 0 0 1 1-1Z"
+                fill="currentColor"
+              />
+            </svg>
+
             <div class="text-xs font-medium">Add Material</div>
           </div>
 
@@ -27,9 +52,9 @@
                 {{ selectedMaterial.name }}
               </div>
               <div class="mt-1 flex items-center justify-between">
-                <span class="text-[10px] text-white/80">{{
-                  selectedMaterial.tag
-                }}</span>
+                <span class="text-[10px] text-white/80">
+                  {{ selectedMaterial.tag }}
+                </span>
                 <span
                   class="rounded bg-white/15 px-2 py-0.5 text-[10px] text-white"
                 >
@@ -40,6 +65,7 @@
           </div>
         </button>
 
+        <!-- Preview box (kept) -->
         <div
           class="min-h-[420px] rounded-xl border border-slate-100 bg-white p-6"
         >
