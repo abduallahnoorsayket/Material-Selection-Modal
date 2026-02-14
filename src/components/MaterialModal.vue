@@ -5,7 +5,7 @@
     @close="$emit('close')"
   >
     <div class="relative flex h-full flex-col">
-      <!-- Floating close (like Figma) -->
+      <!-- Floating close -->
       <button
         type="button"
         class="absolute right-6 top-6 z-10 flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200"
@@ -50,7 +50,7 @@
             </div>
           </div>
 
-          <!-- Row 2: tags (NO border area like screenshot) -->
+          <!-- Row 2: tags-->
           <div class="flex flex-wrap items-center gap-3">
             <TagPills v-model="activeTag" :tags="availableTags" />
           </div>
